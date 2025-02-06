@@ -1,0 +1,8 @@
+COMMAND TO GENERATE KEY
+openssl genrsa -out keypair.pem 2048
+
+GENERATE PUBLIC KEY
+openssl rsa -in keypair.pem -pubout -out public.pem
+
+GENERATE PRIVATE KEY
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem

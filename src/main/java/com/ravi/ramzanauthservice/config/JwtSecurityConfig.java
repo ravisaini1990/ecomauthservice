@@ -50,7 +50,7 @@ public class JwtSecurityConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authRequest ->
-                authRequest.requestMatchers("/", "/register", "/login").permitAll()
+                authRequest.requestMatchers("/", "/register", "/login", "/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated());
         /// required for JWT
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -82,10 +82,7 @@ public class JwtSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://localhost:8080", "https://localhost:8081", "https://localhost:8082"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET"));
-        configuration.setAllowedMethods(List.of("POST"));
-        configuration.setAllowedMethods(List.of("PUT"));
-        configuration.setAllowedMethods(List.of("DELETE"));
+        configuration.setAllowedMethods(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

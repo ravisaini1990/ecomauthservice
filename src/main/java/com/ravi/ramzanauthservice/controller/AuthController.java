@@ -5,7 +5,10 @@ import com.ravi.ramzanauthservice.modal.*;
 import com.ravi.ramzanauthservice.repositories.UserJpaRepository;
 import com.ravi.ramzanauthservice.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,9 +32,19 @@ public class AuthController {
     @Autowired
     UserDtoMapper userDtoMapper;
 
+    @Value("${cert.jwks}")
+    private Resource jwksResource;
+
     @GetMapping("/")
     List<User> findAllUsers() {
         return userJpaRepository.findAll();
+    }
+
+    @GetMapping("/.well-known/jwks.json")
+    public ResponseEntity<Resource> getJwks() {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jwksResource);
     }
 
     @PostMapping("/token")
@@ -51,7 +64,6 @@ public class AuthController {
     @PostMapping("/register")
     ResponseEntity<?> register(@RequestBody User newUser) {
         String encodedPassword = passwordEncoder.encode(newUser.getPassword());
-
         newUser.setPassword(encodedPassword);
         User registeredUser = userJpaRepository.save(newUser);
         String token = tokenService.generateToken(registeredUser.getEmail(), RoleType.ROLE_USER.name());

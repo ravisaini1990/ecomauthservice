@@ -25,7 +25,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authRequest ->
-                authRequest.requestMatchers("/", "/register", "/login").permitAll()
+                authRequest.requestMatchers("/", "/register", "/login", "/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated());
         /// required for JWT
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

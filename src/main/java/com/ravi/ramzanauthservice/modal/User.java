@@ -27,7 +27,7 @@ public class User implements Serializable {
     @Column(name = "pincode")
     private String pinCode;
 
-    /// to exclude password from json response
+    /// to exclude password from json response use Dto
     @Column(name = "password")
     private String password;
 

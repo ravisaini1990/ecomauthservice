@@ -10,14 +10,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
+@EnableMethodSecurity
 public class AuthController {
 
     @Autowired
@@ -68,5 +72,24 @@ public class AuthController {
         User registeredUser = userJpaRepository.save(newUser);
         String token = tokenService.generateToken(registeredUser.getEmail(), RoleType.ROLE_USER.name());
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(userDtoMapper.apply(registeredUser, token));
+    }
+
+    @PostMapping("/getUser")
+    public User getUserViaToken(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        // Retrieve the user by email
+        return userJpaRepository.findByEmail(username);
+    }
+
+    @GetMapping("/user/{email}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public User getUserById(@PathVariable String email) {
+        return userJpaRepository.findByEmail(email);
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public List<User> getAllUsers() {
+        return userJpaRepository.findAll();
     }
 }

@@ -51,7 +51,7 @@ public class JwtSecurityConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authRequest ->
-                authRequest.requestMatchers("/", "/register", "/login", "/.well-known/jwks.json").permitAll()
+                authRequest.requestMatchers("/api/v1/auth/", "/api/v1/auth/register", "/api/v1/auth/login", "/.well-known/jwks.json", "/actuator/**").permitAll()
                         .anyRequest().authenticated());
         /// required for JWT
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -22,6 +22,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 @EnableMethodSecurity
+@RequestMapping("/api/v1/auth/")
 public class AuthController {
 
     @Autowired
